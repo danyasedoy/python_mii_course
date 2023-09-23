@@ -8,7 +8,6 @@ app.config['UPLOAD_FOLDER'] = "/upload"
 def index():
     return render_template('index.html')
 
-
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
