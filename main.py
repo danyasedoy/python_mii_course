@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect
-import csv
+import pandas
 import os
 
 app = Flask(__name__)
@@ -25,33 +25,27 @@ def show_file():
             return redirect(url_for('upload_file'))
 
         with open('upload/' + filename) as f:
-            reader = csv.reader(f)
-            headers = next(reader)
-            data = list(reader)
+            df = pandas.read_csv(f)
+            headers = df.columns
+            data = df.values
         return render_template('file_data.html', headers=headers, data=data)
 
     if request.method == 'POST':
+        with open('upload/' + filename) as f:
+            df = pandas.read_csv(f)
+            headers = df.columns
+            data = df.values
+
         try:
-            rows_start = int(request.form.get('rowsStart'))
-            rows_end = int(request.form.get('rowsEnd'))
-            columns_start = int(request.form.get('columnsStart'))
-            columns_end = int(request.form.get('columnsEnd'))
+            rows_start = int(request.form.get('rowsStart')) - 1 if request.form.get('rowsStart') else 0
+            rows_end = int(request.form.get('rowsEnd')) - 1 if request.form.get('rowsEnd') else len(data)
+            columns_start = int(request.form.get('columnsStart')) - 1 if request.form.get('columnsStart') else 0
+            columns_end = int(request.form.get('columnsEnd')) - 1 if request.form.get('columnsEnd') else len(headers)
         except ValueError:
             return redirect(url_for('show_file'))
 
-        with open('upload/' + filename) as f:
-            reader = csv.reader(f)
-            headers = next(reader)
-            data = list(reader)
-
-            if rows_start >= rows_end or not (0 <= rows_start <= len(data) - 1) or not (1 <= rows_end <= len(data)):
-                return render_template('file_data.html', headers=headers, data=data, message="Некорректный ввод строк")
-
-            if columns_start >= columns_end or not (0 <= columns_start <= len(headers) - 1) or not (1 <= columns_end <= len(headers)):
-                return render_template('file_data.html', headers=headers, data=data, message="Некорректный ввод столбцов")
-
-            headers = headers[columns_start:columns_end]
-            data = [row[columns_start:columns_end] for row in data[rows_start:rows_end]]
+        headers = headers[columns_start:columns_end]
+        data = [row[columns_start:columns_end] for row in data[rows_start:rows_end]]
 
         return render_template('file_data.html', headers=headers, data=data)
 
