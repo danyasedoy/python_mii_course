@@ -25,9 +25,12 @@ def show_file():
             return redirect(url_for('upload_file'))
 
         with open('upload/' + filename) as f:
-            df = pandas.read_csv(f)
-            headers = df.columns
-            data = df.values
+            try:
+                df = pandas.read_csv(f)
+                headers = df.columns
+                data = df.values
+            except pandas.errors.EmptyDataError:
+                return redirect(url_for('upload_file'))
         return render_template('file_data.html', headers=headers, data=data)
 
     if request.method == 'POST':
@@ -38,9 +41,9 @@ def show_file():
 
         try:
             rows_start = int(request.form.get('rowsStart')) - 1 if request.form.get('rowsStart') else 0
-            rows_end = int(request.form.get('rowsEnd')) - 1 if request.form.get('rowsEnd') else len(data)
+            rows_end = int(request.form.get('rowsEnd'))  if request.form.get('rowsEnd') else len(data)
             columns_start = int(request.form.get('columnsStart')) - 1 if request.form.get('columnsStart') else 0
-            columns_end = int(request.form.get('columnsEnd')) - 1 if request.form.get('columnsEnd') else len(headers)
+            columns_end = int(request.form.get('columnsEnd'))  if request.form.get('columnsEnd') else len(headers)
         except ValueError:
             return redirect(url_for('show_file'))
 
