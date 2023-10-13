@@ -33,15 +33,29 @@ def show_file():
                 df = pandas.read_csv(f)
                 headers = df.columns
                 data = df.values
+
+                emptyValues = {}
+
+                for column in headers:
+                    emptyValues[column] = len(df[pandas.isnull(df[column])])
+
+                
+
             except pandas.errors.EmptyDataError:
                 return redirect(url_for('upload_file'))
-        return render_template('file_data.html', headers=headers, data=data)
+        return render_template('file_data.html', headers=headers, data=data, emptyValues = emptyValues)
 
     if request.method == 'POST':
         with open('upload/' + filename) as f:
             df = pandas.read_csv(f)
             headers = df.columns
             data = df.values
+
+            emptyValues = {}
+
+            for column in headers:
+                emptyValues[column] = len(df[pandas.isnull(df[column])])
+
 
         try:
             rows_start = int(request.form.get('rowsStart')) - 1 if request.form.get('rowsStart') else 0
@@ -54,7 +68,7 @@ def show_file():
         headers = headers[columns_start:columns_end]
         data = [row[columns_start:columns_end] for row in data[rows_start:rows_end]]
 
-        return render_template('file_data.html', headers=headers, data=data)
+        return render_template('file_data.html', headers=headers, data=data, emptyValues = emptyValues)
 
 
 @app.route('/analysis/', methods=['GET', 'POST'])

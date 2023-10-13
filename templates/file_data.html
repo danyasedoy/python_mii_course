@@ -50,6 +50,11 @@
     </form>
 
 	<div>{{message}}</div>
+
+
+	{% for k, v in emptyValues.items() %}
+		<h4> Пустые значения в {{k}}: {{v}} </h4>
+	{% endfor %}
 </div>
 
 </body>
