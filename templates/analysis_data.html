@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завтрак европейца</title>
+</head>
+<body>
+
+    <div>
+        <div>
+            <div>
+                <h2>Цены открытия за год</h2>
+            </div>
+            <form action="{{ url_for('analysis', _external=True) }}" method="POST">
+                <input name="year" type="number">
+                <button type="submit">Найти</button>
+            </form>
+            {% if year_data is not undefined %}
+                <h3>Минимальная цена - {{ year_data['min'] }}</h3>
+                <h3>Максимальная цена - {{ year_data['max'] }}</h3>
+                <h3>Средняя цена - {{ year_data['avg'] }}</h3>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <div >
+                <div >
+                    <h2>Цены открытия по всем годам летом</h2>
+                </div>
+                <div>
+                    <h4>Минимальная цена - {{ summer_data[0] }}</h4>
+                </div>
+                <div>
+                    <h4>Максимальная цена - {{ summer_data[1] }} </h4>
+                </div>
+                <div >
+                    <h4>Средняя цена - {{ summer_data[2] }}</h4>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div >
+                <div>
+                    <h2>Цены открытия за каждый год зимой</h2>
+                </div>
+                <table border="2">
+                    <thead>
+                        <tr>
+                            <th>Год</th>
+                            <th>Минимальная цена</th>
+                            <th>Максимальная цена</th>
+                            <th>Средняя цена</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for year, data in winter_data.items() %}
+                        <tr>
+                            <td>{{ year }}</td>
+                            <td>{{ data['min'] }}</td>
+                            <td>{{ data['max'] }}</td>
+                            <td>{{ data['avg'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div>
+                <div>
+                    <h2>Цены открытия за каждый год</h2>
+                </div>
+                <table border="2">
+                    <thead>
+                        <tr>
+                            <th>Год</th>
+                            <th>Минимальная цена</th>
+                            <th>Максимальная цена</th>
+                            <th>Средняя цена</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for year, data in all_years_data.items() %}
+                        <tr>
+                            <td>{{ year }}</td>
+                            <td>{{ data['min'] }}</td>
+                            <td>{{ data['max'] }}</td>
+                            <td>{{ data['avg'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
