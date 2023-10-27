@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завтрак европейца</title>
+    <style type="text/css">
+        * { margin: 0; padding: 0; }
+        p { padding: 10px; }
+        #left { float:left; left: 0; top: 0; }
+        #right {float:right; right: 0; top: 0;  }
+     </style>
+</head>
+<body>
+    <div id="left">
+        <h4>Ваши данные:</h4>
+        <table border="2">
+            <tr>
+                {% for header in headers %}
+                    <th> {{header}} </th>
+                {% endfor %}
+            </tr>
+            {% for row in data %}
+                <tr>
+                    {% for item in row %}
+                    <td> {{item}} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
