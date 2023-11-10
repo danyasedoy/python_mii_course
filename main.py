@@ -24,7 +24,7 @@ def upload_file():
         f.save("upload/" + filename)
         return redirect(url_for('show_file'))
 
-@app.route('/file/', methods=['GET', 'POST'])
+@app.route('/coffee/', methods=['GET', 'POST'])
 def show_file():
     if request.method == 'GET':
         if not os.path.isfile('upload/' + filename):
@@ -40,8 +40,6 @@ def show_file():
 
                 for column in headers:
                     emptyValues[column] = len(df[pandas.isnull(df[column])])
-
-                
 
             except pandas.errors.EmptyDataError:
                 return redirect(url_for('upload_file'))
